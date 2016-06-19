@@ -6,49 +6,49 @@ import Snail.Types
 
 import Node.OS as OS
 
-import Data.Time (Seconds)
+import Data.Time.Duration (Seconds)
 import Data.StrMap (StrMap)
 
 import Control.Monad.Eff.Class (liftEff)
 
-uptime :: Snail Seconds
+uptime :: forall e. Snail e Seconds
 uptime = liftEff OS.uptime
 
-cpus :: Snail (Array OS.CPU)
+cpus :: forall e. Snail e (Array OS.CPU)
 cpus = liftEff OS.cpus
 
-freemem :: Snail Number
+freemem :: forall e. Snail e Number
 freemem = liftEff OS.freemem
 
-totalmem :: Snail Number
+totalmem :: forall e. Snail e Number
 totalmem = liftEff OS.totalmem
 
-home :: Snail Folder
+home :: forall e. Snail e Folder
 home = folder <$> liftEff OS.homedir
 
-tmp :: Snail Folder
+tmp :: forall e. Snail e Folder
 tmp = folder <$> liftEff OS.tmpdir
 
-hostname :: Snail String
+hostname :: forall e. Snail e String
 hostname = liftEff OS.hostname
 
-release :: Snail String
+release :: forall e. Snail e String
 release = liftEff OS.release
 
-ostype :: Snail String
+ostype :: forall e. Snail e String
 ostype = liftEff OS.ostype
 
-networkInterfaces :: Snail (StrMap (Array OS.NetworkInterface))
+networkInterfaces :: forall e. Snail e (StrMap (Array OS.NetworkInterface))
 networkInterfaces = liftEff OS.networkInterfaces
 
-loadavg :: Snail { one :: Number, five :: Number, fifteen :: Number }
+loadavg :: forall e. Snail e { one :: Number, five :: Number, fifteen :: Number }
 loadavg = liftEff OS.loadavg
 
-arch :: Snail OS.Arch
+arch :: forall e. Snail e OS.Arch
 arch = liftEff OS.arch
 
-endianness :: Snail OS.Endianness
+endianness :: forall e. Snail e OS.Endianness
 endianness = liftEff OS.endianness
 
-platform :: Snail OS.Platform
+platform :: forall e. Snail e OS.Platform
 platform = liftEff OS.platform
