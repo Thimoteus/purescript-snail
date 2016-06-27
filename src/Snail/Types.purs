@@ -4,7 +4,6 @@ module Snail.Types
   , SnailEff
   , FILE, FOLDER
   , File, Folder
-  , TagString
   , file
   , folder
   , runFile
@@ -13,10 +12,7 @@ module Snail.Types
   , getAddress
   ) where
 
-import Prelude
-
-import Data.Monoid (class Monoid)
-import Data.Generic (class Generic)
+import Data.String.Yarn (TagString, tag, runTag)
 
 import Node.Buffer (BUFFER)
 import Node.FS (FS)
@@ -43,34 +39,17 @@ type Snail e = Aff (SnailEff e)
 
 type Script e = Eff (SnailEff e)
 
-newtype TagString (a :: # *) = Tag String
-
-derive instance eqTagString :: Eq (TagString a)
-
-derive instance ordTagString :: Ord (TagString a)
-
-derive instance genericTagString :: Generic (TagString a)
-
-instance semigroupTagString :: Semigroup (TagString a) where
-  append (Tag s) (Tag t) = Tag (s <> t)
-
-instance monoidTagString :: Monoid (TagString a) where
-  mempty = Tag ""
-
 data FILE
 data FOLDER
 
 type File = TagString (file :: FILE)
 type Folder = TagString (folder :: FOLDER)
 
-runTag :: forall a. TagString a -> String
-runTag (Tag s) = s
-
 file :: String -> File
-file = Tag
+file = tag
 
 folder :: String -> Folder
-folder = Tag
+folder = tag
 
 runFile :: File -> String
 runFile = runTag

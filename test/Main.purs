@@ -1,28 +1,27 @@
 module Test.Main where
 
-import Prelude
-import Snail (Snail, Script, fork, fromJust, ls, folder, fromMaybe, home, params, echo, sleep, crawl)
-import Data.Array as Array
+import Snail
+import Prelude (Unit, bind, pure, (>>=), (<>))
+
 import Data.Array ((!!))
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Random (RANDOM, randomInt)
-import Node.Path (extname)
+import Data.Either (Either(..))
 
-main :: Script ( random :: RANDOM ) Unit
+import Control.Monad.Eff.Random as Random
+import Control.Monad.Aff (attempt)
+
+testBind :: forall e a. String -> Snail e a -> Snail e a
+testBind msg s = attempt s >>= case _ of
+  Left err -> 1 !? msg
+  Right succ -> pure succ
+
+main :: Script ( random :: Random.RANDOM ) Unit
 main = crawl do
-  echo "Prepare for musical greatness ... "
-  sleep 2
-  echo "Playing!"
-  app
-
-app :: Snail ( random :: RANDOM ) Unit
-app = do
-  ps <- Array.head <$> params
-  tilde <- home
-  dir <- fromMaybe (tilde <> folder "/Music/") $ folder <$> ps
-  files' <- ls dir
-  let files = Array.filter (eq ".mp3" <<< extname) files'.files
-  i <- liftEff $ randomInt 0 $ Array.length files - 1
-  mp3 <- fromJust "No files available" $ files !! i
-  fork "vlc" [mp3]
+  tilde <- testBind "home test failed" home
+  echo "Echo test" ||| 1 !? "echo test failed"
+  sleep 1 ||| 1 !? "sleep test failed"
+  mkdir (tilde <> folder "/testsnail") ||| 1 !? "mkdir test failed"
+  rmdir (tilde <> folder "/testsnail") ||| 1 !? "rmdir test failed"
+  touch (tilde </> file "/testsnail") ||| 1 !? "touch test failed"
+  rm (tilde </> file "/testsnail") ||| 1 !? "rm test failed"
+  0 !? "Tests succeeded"
 

@@ -14,9 +14,10 @@
     "purescript-aff": "^1.0.0",
     "purescript-node-process": "^1.0.0",
     "purescript-node-fs-aff": "^1.0.0",
-    "purescript-node-child-process": "1.0-updates",
+    "purescript-node-child-process": "1.0.0",
     "purescript-node-os": "^1.1.0",
-    "purescript-coercible": "^2.1.0"
+    "purescript-coercible": "^2.1.0",
+    "purescript-yarn": "^1.0.0"
   },
   "devDependencies": {
     "purescript-console": "^1.0.0",
