@@ -1,4 +1,6 @@
 # purescript-snail
+[![Build Status](https://travis-ci.org/Thimoteus/purescript-snail.svg?branch=master)](https://travis-ci.org/Thimoteus/purescript-snail)
+
 *Very much a work in progress*
 
 `purescript-snail` basically places some node commands into `Aff`, providing

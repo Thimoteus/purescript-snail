@@ -11,17 +11,16 @@
     "output"
   ],
   "dependencies": {
-    "purescript-aff": "^1.0.0",
-    "purescript-node-process": "^1.0.0",
-    "purescript-node-fs-aff": "^1.0.0",
-    "purescript-node-child-process": "1.0.0",
-    "purescript-node-os": "^1.1.0",
-    "purescript-coercible": "^2.1.0",
-    "purescript-yarn": "^1.0.0"
+    "purescript-aff": "^3.1.0",
+    "purescript-node-process": "^4.0.0",
+    "purescript-node-fs-aff": "^4.0.0",
+    "purescript-node-child-process": "4.0.0",
+    "purescript-node-os": "^2.0.0",
+    "purescript-coercible": "^3.0.0",
+    "purescript-yarn": "^2.0.0"
   },
   "devDependencies": {
-    "purescript-console": "^1.0.0",
-    "purescript-psci-support": "^1.0.0",
-    "purescript-random": "^1.0.0"
+    "purescript-psci-support": "^3.0.0",
+    "purescript-random": "^3.0.0"
   }
 }

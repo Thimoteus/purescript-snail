@@ -36,38 +36,34 @@ module Snail
   , fromJust, fromMaybe, fromEither
   ) where
 
-import Prelude hiding (when)
-
-import Data.Maybe (Maybe(..))
-import Data.Either (Either(..))
-import Data.StrMap (StrMap)
-import Data.Traversable (traverse)
-import Data.Array (partition, zip, drop, head)
-import Data.Tuple (fst, snd)
-
-import Snail.Types as T
-import Snail.Types (Snail, Script)
-import Snail.OS as OS
-import Snail.Path as P
-
 import Control.Coercible (class Coercible, coerce)
-import Control.Apply ((*>), (<*))
-import Control.Monad.Aff (Aff, makeAff, runAff, later', attempt)
+import Control.Monad.Aff (Aff, makeAff, runAff, delay, attempt)
 import Control.Monad.Aff.Console (log)
 import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Eff.Console (error)
-import Control.Monad.Eff.Exception (message)
 import Control.Monad.Eff.Exception (error) as Error
+import Control.Monad.Eff.Exception (message)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Rec.Class (forever)
-
+import Data.Array (partition, zip, drop, head)
+import Data.Either (Either(..))
+import Data.Maybe (Maybe(..))
+import Data.Newtype (wrap)
+import Data.StrMap (StrMap)
+import Data.Traversable (traverse)
+import Data.Tuple (fst, snd)
 import Node.Buffer (toString)
-import Node.Process (argv, exit, getEnv, setEnv, lookupEnv) as Process
 import Node.ChildProcess (CHILD_PROCESS, ChildProcess, ExecResult, execFile, defaultExecOptions, spawn, defaultSpawnOptions, ignore)
 import Node.Encoding (Encoding(..))
-import Node.FS.Aff (readdir, appendTextFile, writeTextFile, readTextFile, unlink, stat)
 import Node.FS.Aff (exists, rmdir, mkdir) as FS
+import Node.FS.Aff (readdir, appendTextFile, writeTextFile, readTextFile, unlink, stat)
 import Node.FS.Stats (isFile)
+import Node.Process (argv, exit, getEnv, setEnv, lookupEnv) as Process
+import Prelude hiding (when)
+import Snail.OS as OS
+import Snail.Path as P
+import Snail.Types (Snail, Script)
+import Snail.Types as T
 
 -- | Runs a Snail computation
 crawl :: forall e a. Snail e a -> Script e Unit
@@ -85,7 +81,7 @@ infixl 4 bind as |>
 
 -- | Pause the script for a given number of seconds
 sleep :: forall e. Int -> Snail e Unit
-sleep n = later' (n * 1000) $ pure unit
+sleep n = delay (wrap $ coerce (n * 1000))
 
 -- | Given a number of seconds n and a computation c, loop c every n seconds
 loop :: forall a b e. Int -> Snail e a -> Snail e b

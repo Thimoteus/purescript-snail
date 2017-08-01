@@ -1,11 +1,8 @@
 module Test.Main where
 
 import Snail
-import Prelude (Unit, bind, pure, (>>=), (<>))
-
-import Data.Array ((!!))
+import Prelude (Unit, bind, pure, (>>=), (<>), discard)
 import Data.Either (Either(..))
-
 import Control.Monad.Eff.Random as Random
 import Control.Monad.Aff (attempt)
 
