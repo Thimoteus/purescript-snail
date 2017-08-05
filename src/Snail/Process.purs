@@ -2,12 +2,13 @@ module Snail.Process where
 
 import Prelude
 
-import Control.Monad.Aff (Aff, makeAff)
+import Control.Monad.Aff (Aff, apathize, forkAff, makeAff)
 import Control.Monad.Eff.Class (liftEff)
+import Control.Monad.Eff.Exception (throwException)
 import Data.Array (drop, head)
 import Data.Maybe (Maybe(..))
 import Node.Buffer (toString)
-import Node.ChildProcess (CHILD_PROCESS, ChildProcess, ExecResult, defaultExecOptions, defaultSpawnOptions, execFile, ignore, spawn)
+import Node.ChildProcess (CHILD_PROCESS, ChildProcess, ExecResult, defaultExecOptions, defaultSpawnOptions, execFile, ignore, inherit, onError, spawn, toStandardError)
 import Node.Encoding (Encoding(..))
 import Node.Process as Process
 import Snail.Console (echo, err)
@@ -38,8 +39,14 @@ foreign import unref :: forall e. ChildProcess -> Script e Unit
 
 -- | Send a process into the background.
 fork :: forall e. String -> Array String -> Snail e Unit
-fork cmd as = liftEff <<< unref
+fork cmd as = apathize <<< forkAff <<< liftEff <<< unref
           <=< liftEff $ spawn cmd as (defaultSpawnOptions {stdio = ignore, detached = true})
+
+-- Run a command, inheriting stdout, stderr and stdin from the child process
+exec :: forall e. String -> Array String -> Snail e Unit
+exec cmd as = void do
+  cp <- liftEff $ spawn cmd as $ defaultSpawnOptions {stdio = inherit}
+  liftEff $ onError cp $ throwException <<< toStandardError
 
 -- | Get all the arguments to the script.
 args :: forall e. Snail e (Array String)

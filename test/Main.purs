@@ -11,6 +11,10 @@ testBind msg s = attempt s >>= case _ of
   Left err -> 1 !? msg
   Right succ -> pure succ
 
+testPulp :: forall e. Snail e Unit
+testPulp = do
+  exec "pulp" ["build"]
+
 main :: Script ( random :: Random.RANDOM ) Unit
 main = crawl do
   tilde <- testBind "home test failed" home

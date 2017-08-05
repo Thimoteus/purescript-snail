@@ -26,10 +26,11 @@ import Control.Monad.Eff.Exception (EXCEPTION)
 import Control.Monad.Eff.Console (CONSOLE)
 
 type SnailEff e = ( fs :: FS
-                  , console :: CONSOLE 
+                  , console :: CONSOLE
                   , cp :: CHILD_PROCESS
                   , process :: PROCESS
                   , err :: EXCEPTION
+                  , exception :: EXCEPTION
                   , buffer :: BUFFER
                   , os :: OS
                   | e
