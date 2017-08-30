@@ -22,7 +22,7 @@
     "purescript-node-child-process": "4.0.0",
     "purescript-node-os": "^2.0.0",
     "purescript-coercible": "^3.0.0",
-    "purescript-yarn": "^2.0.0",
+    "purescript-yarn": "^3.0.0",
     "purescript-nonempty": "^4.0.0"
   },
   "devDependencies": {
