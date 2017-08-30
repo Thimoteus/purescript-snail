@@ -11,7 +11,7 @@
     "bower_components",
     "output"
   ],
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/thimoteus/purescript-snail.git"
   },
@@ -22,7 +22,8 @@
     "purescript-node-child-process": "4.0.0",
     "purescript-node-os": "^2.0.0",
     "purescript-coercible": "^3.0.0",
-    "purescript-yarn": "^2.0.0"
+    "purescript-yarn": "^2.0.0",
+    "purescript-nonempty": "^4.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^3.0.0",

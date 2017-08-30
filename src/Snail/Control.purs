@@ -79,6 +79,6 @@ infixr 1 mIf as ~~>
 
 -- | Run a given computation when a monadic boolean is true.
 when :: forall m a. Monad m => m Boolean -> (Unit -> m a) -> m Unit
-when mb ma = (mb ~~> void <<< ma) (\_ -> pure unit)
+when mb ma = mb ~~> void <<< ma $ \_ -> pure unit
 
 infixr 1 when as ~?>

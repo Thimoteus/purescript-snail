@@ -1,4 +1,14 @@
-module Snail.Process where
+module Snail.Process
+  ( exec
+  , raw
+  , fork
+  , run
+  , args
+  , params
+  , input
+  , exit
+  , exitWith, (!?)
+  ) where
 
 import Prelude
 
@@ -7,46 +17,61 @@ import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Eff.Exception (throwException)
 import Data.Array (drop, head)
 import Data.Maybe (Maybe(..))
+import Data.NonEmpty (NonEmpty, (:|))
 import Node.Buffer (toString)
-import Node.ChildProcess (CHILD_PROCESS, ChildProcess, ExecResult, defaultExecOptions, defaultSpawnOptions, execFile, ignore, inherit, onError, spawn, toStandardError)
+import Node.ChildProcess as CP
 import Node.Encoding (Encoding(..))
 import Node.Process as Process
 import Snail.Console (echo, err)
 import Snail.Control (fromJust, (&&&))
 import Snail.Types (Snail, Script)
 
-runFileImp :: forall e. String -> Array String -> Aff ( cp :: CHILD_PROCESS | e ) ExecResult
-runFileImp cmd as = makeAff execFileImpl
+execFileImp :: forall e. String -> Array String -> Aff ( cp :: CP.CHILD_PROCESS | e ) CP.ExecResult
+execFileImp cmd as = makeAff execFileImpl
   where
     execFileImpl fc sc =
       let onRes res = case res.error of
             Just x -> fc x
             _ -> sc res
-       in execFile cmd as defaultExecOptions onRes
+       in CP.execFile cmd as CP.defaultExecOptions onRes
 
 -- | Run a command with an array of arguments, getting the output as a UTF8
--- | encoded string.
-run :: forall e. String -> Array String -> Snail e String
-run cmd as = do
-  res <- runFileImp cmd as
+-- | encoded string. Note that this uses node's `execFile` and not `exec` under
+-- | the hood.
+exec :: forall e. NonEmpty Array String -> Snail e String
+exec (cmd :| as) = do
+  res <- execFileImp cmd as
   liftEff $ toString UTF8 res.stdout
 
--- | Run a command, disregarding the output.
-command :: forall e. String -> Array String -> Snail e Unit
-command cmd = void <<< run cmd
+rawImpl :: forall e. String -> Snail e CP.ExecResult
+rawImpl cmd = makeAff rawImpl'
+  where
+    rawImpl' fc sc =
+      let onRes res = case res.error of
+            Just x -> fc x
+            _ -> sc res
+       in CP.exec cmd CP.defaultExecOptions onRes
 
-foreign import unref :: forall e. ChildProcess -> Script e Unit
+-- | Runs a raw command using node's `exec`.
+raw :: forall e. String -> Snail e String
+raw cmd = do
+  res <- rawImpl cmd
+  liftEff $ toString UTF8 res.stdout
+
+foreign import unref :: forall e. CP.ChildProcess -> Script e Unit
 
 -- | Send a process into the background.
-fork :: forall e. String -> Array String -> Snail e Unit
-fork cmd as = apathize <<< forkAff <<< liftEff <<< unref
-          <=< liftEff $ spawn cmd as (defaultSpawnOptions {stdio = ignore, detached = true})
+fork :: forall e. NonEmpty Array String -> Snail e Unit
+fork (cmd :| as)
+  = apathize <<< forkAff <<< liftEff <<< unref
+  <=< liftEff
+    $ CP.spawn cmd as (CP.defaultSpawnOptions {stdio = CP.ignore, detached = true})
 
--- Run a command, inheriting stdout, stderr and stdin from the child process
-exec :: forall e. String -> Array String -> Snail e Unit
-exec cmd as = void do
-  cp <- liftEff $ spawn cmd as $ defaultSpawnOptions {stdio = inherit}
-  liftEff $ onError cp $ throwException <<< toStandardError
+-- Run a command as a child process, inheriting stdout, stderr and stdin from it
+run :: forall e. NonEmpty Array String -> Snail e Unit
+run (cmd :| as) = do
+  cp <- liftEff $ CP.spawn cmd as $ CP.defaultSpawnOptions {stdio = CP.inherit}
+  liftEff $ CP.onError cp $ throwException <<< CP.toStandardError
 
 -- | Get all the arguments to the script.
 args :: forall e. Snail e (Array String)
