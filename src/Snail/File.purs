@@ -3,7 +3,7 @@ module Snail.File where
 import Prelude
 
 import Data.Array (partition, zip)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), maybe)
 import Data.Traversable (traverse)
 import Data.Tuple (fst, snd)
 import Node.Encoding (Encoding(..))
@@ -69,6 +69,11 @@ mv :: forall e. T.File -> T.Folder -> Maybe String -> Snail e Unit
 mv file folder = case _ of
   Just newName -> FS.rename (T.runFile file) (T.runFile $ folder </> T.file newName)
   _ -> FS.rename (T.runFile file) (T.runFile $ folder </> file)
+
+cp :: forall e. T.File -> T.Folder -> Maybe String -> Snail e Unit
+cp file folder name = do
+  contents <- cat file
+  contents +> folder </> maybe file T.file name
 
 chmod :: forall e. T.File -> Perms -> Snail e Unit
 chmod file perms = FS.chmod (T.runFile file) perms
