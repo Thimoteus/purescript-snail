@@ -20,23 +20,23 @@ import Node.OS (OS)
 import Node.ChildProcess (CHILD_PROCESS)
 import Node.Process (PROCESS)
 
-import Control.Monad.Aff (Aff)
+import Control.Monad.Promise (Promise)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import Control.Monad.Eff.Console (CONSOLE)
 
-type SnailEff e = ( fs :: FS
-                  , console :: CONSOLE
-                  , cp :: CHILD_PROCESS
-                  , process :: PROCESS
-                  , err :: EXCEPTION
-                  , exception :: EXCEPTION
-                  , buffer :: BUFFER
-                  , os :: OS
-                  | e
-                  )
+type SnailEff e =
+  ( fs :: FS
+  , console :: CONSOLE
+  , cp :: CHILD_PROCESS
+  , process :: PROCESS
+  , err :: EXCEPTION
+  , exception :: EXCEPTION
+  , buffer :: BUFFER
+  , os :: OS
+  | e )
 
-type Snail e = Aff (SnailEff e)
+type Snail e = Promise (SnailEff e)
 
 type Script e = Eff (SnailEff e)
 
