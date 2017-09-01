@@ -13,7 +13,7 @@ module Snail
 
 import Prelude
 
-import Control.Monad.Aff (runAff)
+import Control.Monad.Promise (class Deferred, runPromise)
 import Control.Monad.Eff.Console (error)
 import Control.Monad.Eff.Exception (message)
 import Snail.OS as OS
@@ -26,7 +26,7 @@ import Snail.Env as Env
 import Snail.File as File
 
 -- | Runs a Snail computation
-crawl :: forall e a. Types.Snail e a -> Types.Script e Unit
-crawl = void <<< runAff (error <<< message) \ _ -> pure unit
+crawl :: forall e a. (Deferred => Types.Snail e a) -> Types.Script e Unit
+crawl p = runPromise (\ _ -> pure unit) (error <<< message) p
 
 infixl 4 bind as |>
