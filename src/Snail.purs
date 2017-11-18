@@ -16,17 +16,18 @@ import Prelude
 import Control.Monad.Aff (runAff)
 import Control.Monad.Eff.Console (error)
 import Control.Monad.Eff.Exception (message)
-import Snail.OS as OS
-import Snail.Path as Path
-import Snail.Types as Types
+import Data.Either (either)
 import Snail.Console as Console
 import Snail.Control as Control
-import Snail.Process as Process
 import Snail.Env as Env
 import Snail.File as File
+import Snail.OS as OS
+import Snail.Path as Path
+import Snail.Process as Process
+import Snail.Types as Types
 
 -- | Runs a Snail computation
 crawl :: forall e a. Types.Snail e a -> Types.Script e Unit
-crawl = void <<< runAff (error <<< message) \ _ -> pure unit
+crawl snail = void (runAff (either (error <<< message) (const (pure unit))) snail)
 
 infixl 4 bind as |>

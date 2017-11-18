@@ -1,6 +1,6 @@
 {
   "name": "purescript-snail",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "license": "MIT",
   "moduleType": [
     "node"
@@ -16,13 +16,13 @@
     "url": "git://github.com/thimoteus/purescript-snail.git"
   },
   "dependencies": {
-    "purescript-aff": "^3.1.0",
-    "purescript-node-process": "^4.0.0",
-    "purescript-node-fs-aff": "^4.0.0",
+    "purescript-aff": "^4.0.0",
+    "purescript-node-process": "^5.0.0",
+    "purescript-node-fs-aff": "^5.0.0",
     "purescript-node-child-process": "4.0.0",
-    "purescript-node-os": "^2.0.0",
+    "purescript-node-os": "^2.1.0",
     "purescript-coercible": "^3.0.0",
-    "purescript-yarn": "^3.0.0",
+    "purescript-yarn": "^3.0.1",
     "purescript-nonempty": "^4.0.0"
   },
   "devDependencies": {

@@ -12,10 +12,11 @@ module Snail.Process
 
 import Prelude
 
-import Control.Monad.Aff (Aff, apathize, forkAff, makeAff)
+import Control.Monad.Aff (Aff, apathize, effCanceler, forkAff, makeAff)
 import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Eff.Exception (throwException)
 import Data.Array (drop, head)
+import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
 import Data.NonEmpty (NonEmpty, (:|))
 import Node.Buffer (toString)
@@ -29,11 +30,13 @@ import Snail.Types (Snail, Script)
 execFileImp :: forall e. String -> Array String -> Aff ( cp :: CP.CHILD_PROCESS | e ) CP.ExecResult
 execFileImp cmd as = makeAff execFileImpl
   where
-    execFileImpl fc sc =
-      let onRes res = case res.error of
-            Just x -> fc x
-            _ -> sc res
-       in CP.execFile cmd as CP.defaultExecOptions onRes
+    execFileImpl cb =
+      let
+        onRes res = case res.error of
+          Just x -> cb (Left x)
+          _ -> cb (Right res)
+      in
+        pure (effCanceler (CP.execFile cmd as CP.defaultExecOptions onRes))
 
 -- | Run a command with an array of arguments, getting the output as a UTF8
 -- | encoded string. Note that this uses node's `execFile` and not `exec` under
@@ -46,11 +49,13 @@ exec (cmd :| as) = do
 rawImpl :: forall e. String -> Snail e CP.ExecResult
 rawImpl cmd = makeAff rawImpl'
   where
-    rawImpl' fc sc =
-      let onRes res = case res.error of
-            Just x -> fc x
-            _ -> sc res
-       in CP.exec cmd CP.defaultExecOptions onRes
+    rawImpl' cb =
+      let
+        onRes res = case res.error of
+          Just x -> cb (Left x)
+          _ -> cb (Right res)
+      in
+        pure (effCanceler (CP.exec cmd CP.defaultExecOptions onRes))
 
 -- | Runs a raw command using node's `exec`.
 raw :: forall e. String -> Snail e String
