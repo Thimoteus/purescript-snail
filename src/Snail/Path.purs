@@ -7,10 +7,6 @@ import Effect.Class (liftEffect)
 import Node.Process as Process
 import Snail.Types (File, Folder, Snail, file, runFolder)
 
--- import Control.Monad.Eff.Class (liftEff)
--- import Snail.Types (File, Folder, Snail, file, runFolder)
--- import Node.Process as Process
-
 pathpend :: Folder -> File -> File
 pathpend fld ext = file (runFolder fld) <> ext
 
