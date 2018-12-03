@@ -14,7 +14,8 @@ module Snail
 import Prelude
 
 import Data.Either (either)
-import Effect.Aff (runAff)
+import Effect (Effect)
+import Effect.Aff (Aff, runAff)
 import Effect.Class.Console (error)
 import Effect.Exception (message)
 import Snail.Console (echo, err) as Console
@@ -24,10 +25,10 @@ import Snail.File (appendFile, cat, chmod, cp, ls, mkdir, mv, prependFile, rm, r
 import Snail.OS (arch, cpus, endianness, freemem, home, hostname, loadavg, networkInterfaces, ostype, platform, release, tmp, totalmem, uptime) as OS
 import Snail.Path (chdir, pathpend, (</>)) as Path
 import Snail.Process (args, exec, exit, exitWith, fork, input, params, raw, run, (!?)) as Process
-import Snail.Types (class Address, FILE, FOLDER, File, Folder, Script, Snail, file, folder, getAddress, runFile, runFolder) as Types
+import Snail.Types (class Address, FILE, FOLDER, File, Folder, file, folder, getAddress, runFile, runFolder) as Types
 
 -- | Runs a Snail computation
-crawl :: forall a. Types.Snail a -> Types.Script Unit
+crawl :: forall a. Aff a -> Effect Unit
 crawl snail = void (runAff (either (error <<< message) (const (pure unit))) snail)
 
 infixl 4 bind as |>

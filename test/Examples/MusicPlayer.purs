@@ -5,13 +5,14 @@ import Prelude
 import Data.Array ((!!))
 import Data.Array as Array
 import Data.NonEmpty ((:|))
+import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Random (randomInt) as Random
 import Node.Path (extname)
-import Snail (Script, crawl, folder, fromJust, fromMaybe, home, ls, params)
+import Snail (crawl, folder, fromJust, fromMaybe, home, ls, params)
 import Snail.Process (fork)
 
-main :: Script Unit
+main :: Effect Unit
 main = crawl do
   input <- Array.head <$> params
   tilde <- home

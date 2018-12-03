@@ -1,7 +1,5 @@
 module Snail.Types
-  ( Snail
-  , Script
-  , FILE, FOLDER
+  ( FILE, FOLDER
   , File, Folder
   , file
   , folder
@@ -10,14 +8,9 @@ module Snail.Types
   , class Address
   , getAddress
   ) where
+
 import Data.String.Yarn (TagString, tag, runTag)
-import Effect (Effect)
-import Effect.Aff (Aff)
 
-
-type Snail = Aff
-
-type Script = Effect
 
 data FILE
 data FOLDER
