@@ -21,7 +21,6 @@
     "purescript-node-fs-aff": "^6.0.0",
     "purescript-node-child-process": "^5.0.0",
     "purescript-node-os": "thimoteus/purescript-node-os#master",
-    "purescript-coercible": "paluh/purescript-coercible#master",
     "purescript-yarn": "^4.0.0",
     "purescript-nonempty": "^5.0.0"
   },

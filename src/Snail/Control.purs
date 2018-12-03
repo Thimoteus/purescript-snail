@@ -2,12 +2,12 @@ module Snail.Control where
 
 import Prelude hiding (when)
 
-import Control.Coercible (coerce)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Rec.Class (forever)
 import Data.Either (Either(..))
+import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
-import Data.Newtype (wrap)
+import Data.Time.Duration (Milliseconds(..))
 import Effect.Aff (attempt, delay)
 import Effect.Exception as Error
 import Node.FS.Aff as FS
@@ -16,7 +16,7 @@ import Snail.Types as T
 
 -- | Pause the script for a given number of seconds
 sleep :: Int -> Snail Unit
-sleep n = delay (wrap $ coerce (n * 1000))
+sleep n = delay (Milliseconds (toNumber $ n * 1000))
 
 -- | Given a number of seconds n and a computation c, loop c every n seconds
 loop :: forall a b. Int -> Snail a -> Snail b
