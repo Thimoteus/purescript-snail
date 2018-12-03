@@ -16,17 +16,16 @@
     "url": "git://github.com/thimoteus/purescript-snail.git"
   },
   "dependencies": {
-    "purescript-aff": "^4.0.0",
-    "purescript-node-process": "^5.0.0",
-    "purescript-node-fs-aff": "^5.0.0",
-    "purescript-node-child-process": "4.0.0",
-    "purescript-node-os": "^2.1.0",
-    "purescript-coercible": "^3.0.0",
-    "purescript-yarn": "^3.0.1",
-    "purescript-nonempty": "^4.0.0"
+    "purescript-aff": "^5.0.2",
+    "purescript-node-process": "^6.0.0",
+    "purescript-node-fs-aff": "^6.0.0",
+    "purescript-node-child-process": "^5.0.0",
+    "purescript-node-os": "thimoteus/purescript-node-os#master",
+    "purescript-yarn": "^4.0.0",
+    "purescript-nonempty": "^5.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^3.0.0",
-    "purescript-random": "^3.0.0"
+    "purescript-psci-support": "^4.0.0",
+    "purescript-random": "^4.0.0"
   }
 }
