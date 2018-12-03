@@ -1,21 +1,23 @@
 module Test.Main where
 
 import Snail
-import Prelude (Unit, bind, pure, (>>=), (<>), discard)
-import Data.Either (Either(..))
-import Control.Monad.Eff.Random as Random
-import Control.Monad.Aff (attempt)
 
-testBind :: forall e a. String -> Snail e a -> Snail e a
+import Data.Either (Either(..))
+import Data.NonEmpty ((:|))
+import Effect.Aff (attempt)
+import Prelude (Unit, bind, pure, (>>=), (<>), discard)
+import Snail.Process (exec)
+
+testBind :: forall a. String -> Snail a -> Snail a
 testBind msg s = attempt s >>= case _ of
   Left err -> 1 !? msg
   Right succ -> pure succ
 
-testPulp :: forall e. Snail e Unit
+testPulp :: Snail String
 testPulp = do
-  exec "pulp" ["build"]
+  exec ("pulp" :| ["build"])
 
-main :: Script ( random :: Random.RANDOM ) Unit
+main :: Script Unit
 main = crawl do
   tilde <- testBind "home test failed" home
   echo "Echo test" ||| 1 !? "echo test failed"

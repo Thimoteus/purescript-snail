@@ -13,10 +13,10 @@ module Snail
 
 import Prelude
 
-import Control.Monad.Aff (runAff)
-import Control.Monad.Eff.Console (error)
-import Control.Monad.Eff.Exception (message)
 import Data.Either (either)
+import Effect.Aff (runAff)
+import Effect.Class.Console (error)
+import Effect.Exception (message)
 import Snail.Console as Console
 import Snail.Control as Control
 import Snail.Env as Env
@@ -27,7 +27,7 @@ import Snail.Process as Process
 import Snail.Types as Types
 
 -- | Runs a Snail computation
-crawl :: forall e a. Types.Snail e a -> Types.Script e Unit
+crawl :: forall a. Types.Snail a -> Types.Script Unit
 crawl snail = void (runAff (either (error <<< message) (const (pure unit))) snail)
 
 infixl 4 bind as |>

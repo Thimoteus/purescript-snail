@@ -1,54 +1,51 @@
 module Snail.OS where
 
-import Prelude ((<$>))
-
 import Snail.Types
 
-import Node.OS as OS
-
 import Data.Time.Duration (Seconds)
-import Data.StrMap (StrMap)
+import Effect.Class (liftEffect)
+import Foreign.Object (Object)
+import Node.OS as OS
+import Prelude ((<$>))
 
-import Control.Monad.Eff.Class (liftEff)
+uptime :: Snail Seconds
+uptime = liftEffect OS.uptime
 
-uptime :: forall e. Snail e Seconds
-uptime = liftEff OS.uptime
+cpus :: Snail (Array OS.CPU)
+cpus = liftEffect OS.cpus
 
-cpus :: forall e. Snail e (Array OS.CPU)
-cpus = liftEff OS.cpus
+freemem :: Snail Number
+freemem = liftEffect OS.freemem
 
-freemem :: forall e. Snail e Number
-freemem = liftEff OS.freemem
+totalmem :: Snail Number
+totalmem = liftEffect OS.totalmem
 
-totalmem :: forall e. Snail e Number
-totalmem = liftEff OS.totalmem
+home :: Snail Folder
+home = folder <$> liftEffect OS.homedir
 
-home :: forall e. Snail e Folder
-home = folder <$> liftEff OS.homedir
+tmp :: Snail Folder
+tmp = folder <$> liftEffect OS.tmpdir
 
-tmp :: forall e. Snail e Folder
-tmp = folder <$> liftEff OS.tmpdir
+hostname :: Snail String
+hostname = liftEffect OS.hostname
 
-hostname :: forall e. Snail e String
-hostname = liftEff OS.hostname
+release :: Snail String
+release = liftEffect OS.release
 
-release :: forall e. Snail e String
-release = liftEff OS.release
+ostype :: Snail String
+ostype = liftEffect OS.ostype
 
-ostype :: forall e. Snail e String
-ostype = liftEff OS.ostype
+networkInterfaces :: Snail (Object (Array OS.NetworkInterface))
+networkInterfaces = liftEffect OS.networkInterfaces
 
-networkInterfaces :: forall e. Snail e (StrMap (Array OS.NetworkInterface))
-networkInterfaces = liftEff OS.networkInterfaces
+loadavg :: Snail { one :: Number, five :: Number, fifteen :: Number }
+loadavg = liftEffect OS.loadavg
 
-loadavg :: forall e. Snail e { one :: Number, five :: Number, fifteen :: Number }
-loadavg = liftEff OS.loadavg
+arch :: Snail OS.Arch
+arch = liftEffect OS.arch
 
-arch :: forall e. Snail e OS.Arch
-arch = liftEff OS.arch
+endianness :: Snail OS.Endianness
+endianness = liftEffect OS.endianness
 
-endianness :: forall e. Snail e OS.Endianness
-endianness = liftEff OS.endianness
-
-platform :: forall e. Snail e OS.Platform
-platform = liftEff OS.platform
+platform :: Snail OS.Platform
+platform = liftEffect OS.platform

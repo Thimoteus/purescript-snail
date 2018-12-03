@@ -1,7 +1,6 @@
 module Snail.Types
   ( Snail
   , Script
-  , SnailEff
   , FILE, FOLDER
   , File, Folder
   , file
@@ -11,34 +10,14 @@ module Snail.Types
   , class Address
   , getAddress
   ) where
-
 import Data.String.Yarn (TagString, tag, runTag)
+import Effect (Effect)
+import Effect.Aff (Aff)
 
-import Node.Buffer (BUFFER)
-import Node.FS (FS)
-import Node.OS (OS)
-import Node.ChildProcess (CHILD_PROCESS)
-import Node.Process (PROCESS)
 
-import Control.Monad.Aff (Aff)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (EXCEPTION)
-import Control.Monad.Eff.Console (CONSOLE)
+type Snail = Aff
 
-type SnailEff e = ( fs :: FS
-                  , console :: CONSOLE
-                  , cp :: CHILD_PROCESS
-                  , process :: PROCESS
-                  , err :: EXCEPTION
-                  , exception :: EXCEPTION
-                  , buffer :: BUFFER
-                  , os :: OS
-                  | e
-                  )
-
-type Snail e = Aff (SnailEff e)
-
-type Script e = Eff (SnailEff e)
+type Script = Effect
 
 data FILE
 data FOLDER
